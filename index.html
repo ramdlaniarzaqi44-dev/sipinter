@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPINTER (Sistem Perizinan Terpadu Al-Multazam)</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) for a modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Feather Icons for a clean icon set -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        /* Apply the Inter font to the body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* A lighter, softer background */
+        }
+
+        /* Custom focus styles for better accessibility and aesthetics */
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+            border-color: #3B82F6;
+        }
+
+        /* Custom file input button styling for a consistent look */
+        .file-input-button::file-selector-button {
+            margin-right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 0;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background-color: #EFF6FF; /* bg-blue-50 */
+            color: #1D4ED8; /* text-blue-700 */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .file-input-button::file-selector-button:hover {
+            background-color: #DBEAFE; /* bg-blue-100 */
+        }
+
+        /* Animation for the modal */
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-leave {
+            animation: fadeOut 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+
+    <!-- Main form container with enhanced shadow and border -->
+    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500">
+        <!-- Form Header with a gradient background -->
+        <div class="p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+            <div class="flex items-center gap-4">
+                <img src="https://i.ibb.co.com/PG59mBdt/Logo-SMA-Baru.png" alt="Logo SIPINTER" class="w-16 h-16 object-contain">
+                <div>
+                    <h1 class="text-3xl font-extrabold tracking-tight">SIPINTER</h1>
+                    <p class="mt-1 text-blue-100">Sistem Perizinan Terpadu Al-Multazam</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Body -->
+        <form id="permissionForm" class="p-8 space-y-8">
+            <p class="text-sm text-gray-700 bg-blue-50 p-4 rounded-lg border border-blue-200 flex items-center gap-3">
+                <i data-feather="info" class="w-5 h-5 text-blue-600"></i>
+                <span>Silakan isi formulir perizinan ini dengan lengkap dan benar. Kolom bertanda <span class="text-red-500 font-bold">*</span> wajib diisi.</span>
+            </p>
+
+            <!-- Section: Data Diri -->
+            <fieldset class="space-y-6">
+                <legend class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4 w-full">Data Diri</legend>
+                <div>
+                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap (beserta gelar) <span class="text-red-500">*</span></label>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" required class="w-full p-3 border border-gray-300 rounded-md focus-ring transition-shadow" placeholder="Contoh: Drs. H. Ahmad Fauzi, M.Pd.">
+                </div>
+                <div>
+                    <label for="jabatan" class="block text-sm font-medium text-gray-700 mb-1">Jabatan / Posisi <span class="text-red-500">*</span></label>
+                    <select id="jabatan" name="jabatan" required class="w-full p-3 border border-gray-300 rounded-md focus-ring bg-white transition-shadow">
+                        <option value="" disabled selected>-- Pilih Jabatan --</option>
+                        <option value="Kepala Sekolah">Kepala Sekolah</option>
+                        <option value="Wakil Kepala Sekolah">Wakil Kepala Sekolah</option>
+                        <option value="Guru Mata Pelajaran">Guru Mata Pelajaran</option>
+                        <option value="Wali Kelas">Wali Kelas</option>
+                        <option value="Staf Tata Usaha (TU)">Staf Tata Usaha (TU)</option>
+                        <option value="Pembina Ekstrakurikuler">Pembina Ekstrakurikuler</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <!-- Section: Detail Izin & Kegiatan -->
+             <fieldset class="space-y-6">
+                <legend class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4 w-full">Detail Izin & Kegiatan</legend>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="tanggal_izin" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Izin <span class="text-red-500">*</span></label>
+                        <input type="date" id="tanggal_izin" name="tanggal_izin" required class="w-full p-3 border border-gray-300 rounded-md focus-ring transition-shadow">
+                    </div>
+                    <div>
+                        <label for="waktu_izin" class="block text-sm font-medium text-gray-700 mb-1">Waktu Mulai <span class="text-red-500">*</span></label>
+                        <input type="time" id="waktu_izin" name="waktu_izin" required class="w-full p-3 border border-gray-300 rounded-md focus-ring transition-shadow">
+                    </div>
+                    <div>
+                        <label for="waktu_selesai" class="block text-sm font-medium text-gray-700 mb-1">Waktu Selesai <span class="text-red-500">*</span></label>
+                        <input type="time" id="waktu_selesai" name="waktu_selesai" required class="w-full p-3 border border-gray-300 rounded-md focus-ring transition-shadow">
+                    </div>
+                </div>
+                 <div>
+                    <label for="tempat_kegiatan" class="block text-sm font-medium text-gray-700 mb-1">Tempat Kegiatan <span class="text-red-500">*</span></label>
+                    <input type="text" id="tempat_kegiatan" name="tempat_kegiatan" required class="w-full p-3 border border-gray-300 rounded-md focus-ring transition-shadow" placeholder="Contoh: Aula Universitas Gadjah Mada, Yogyakarta">
+                </div>
+            </fieldset>
+
+            <!-- Section: Lampiran -->
+            <fieldset class="space-y-6">
+                <legend class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4 w-full">Lampiran</legend>
+                <!-- Field: Unggah Surat Tugas -->
+                <div>
+                    <label for="surat_tugas" class="block text-sm font-medium text-gray-700 mb-1">Unggah Surat Tugas <span class="text-red-500">*</span></label>
+                    <div class="flex items-start gap-4">
+                        <div class="flex-grow">
+                            <input type="file" id="surat_tugas" name="surat_tugas" required accept=".pdf" class="w-full text-sm text-gray-500 file-input-button border rounded-lg p-2 border-gray-300">
+                            <p class="mt-2 text-xs text-gray-500">Hanya format PDF yang diizinkan.</p>
+                        </div>
+                        <div id="pdf_preview" class="hidden w-48 flex-shrink-0 p-3 border rounded-lg bg-gray-50 items-center gap-3">
+                            <i data-feather="file-text" class="w-8 h-8 text-red-500 flex-shrink-0"></i>
+                            <span id="pdf_filename" class="text-xs text-gray-700 truncate"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Field: Unggah Foto Kegiatan -->
+                <div>
+                    <label for="foto_kegiatan" class="block text-sm font-medium text-gray-700 mb-1">Unggah Foto Kegiatan <span class="text-red-500">*</span></label>
+                    <div class="flex items-start gap-4">
+                        <div class="flex-grow">
+                            <input type="file" id="foto_kegiatan" name="foto_kegiatan" required accept="image/*" class="w-full text-sm text-gray-500 file-input-button border rounded-lg p-2 border-gray-300">
+                            <p class="mt-2 text-xs text-gray-500">Format: JPG, PNG, GIF.</p>
+                        </div>
+                        <img id="image_preview" src="" alt="Pratinjau Foto" class="hidden w-48 h-32 object-cover rounded-lg border-2 border-gray-200 shadow-sm"/>
+                    </div>
+                </div>
+                
+                <!-- Field: Unggah Surat Undangan (Wajib) -->
+                <div>
+                    <label for="surat_undangan" class="block text-sm font-medium text-gray-700 mb-1">Unggah Surat Undangan / Lainnya <span class="text-red-500">*</span></label>
+                    <div class="flex items-start gap-4">
+                        <div class="flex-grow">
+                            <input type="file" id="surat_undangan" name="surat_undangan" required accept=".pdf,image/*" class="w-full text-sm text-gray-500 file-input-button border rounded-lg p-2 border-gray-300">
+                            <p class="mt-2 text-xs text-gray-500">Format: PDF, JPG, PNG.</p>
+                        </div>
+                        <div id="undangan_preview" class="hidden w-48 flex-shrink-0 p-3 border rounded-lg bg-gray-50 items-center gap-3">
+                             <i data-feather="file" class="w-8 h-8 text-gray-500 flex-shrink-0"></i>
+                             <span id="undangan_filename" class="text-xs text-gray-700 truncate"></span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Submit Button -->
+            <div class="pt-6 border-t border-gray-200">
+                <button type="submit" id="submitButton" class="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 flex items-center justify-center gap-2">
+                    <i data-feather="send" class="w-5 h-5"></i>
+                    Kirim Perizinan
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal (Success & Alert) -->
+    <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center">
+            <div id="modalIconContainer" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full"></div>
+            <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mt-6"></h3>
+            <p id="modalMessage" class="text-gray-600 mt-2"></p>
+            <button id="closeModalButton" class="mt-8 w-full text-white font-bold py-3 rounded-lg"></button>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // URL APLIKASI WEB ANDA (SUDAH DIPERBARUI)
+        // =====================================================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc3RVSSNBsFsgO1cy_cW0or1H7laUeVxaD3rwVr-tIVEQGibBOgD1yNEaXeVk-WEglHQ/exec";
+
+        // --- DOM Element References ---
+        const form = document.getElementById('permissionForm');
+        const submitButton = document.getElementById('submitButton');
+        const suratTugasInput = document.getElementById('surat_tugas');
+        const pdfPreviewContainer = document.getElementById('pdf_preview');
+        const pdfFilenameSpan = document.getElementById('pdf_filename');
+        const fotoKegiatanInput = document.getElementById('foto_kegiatan');
+        const imagePreview = document.getElementById('image_preview');
+        const suratUndanganInput = document.getElementById('surat_undangan');
+        const undanganPreviewContainer = document.getElementById('undangan_preview');
+        const undanganFilenameSpan = document.getElementById('undangan_filename');
+        
+        // --- Modal Element References ---
+        const alertModal = document.getElementById('alertModal');
+        const modalIconContainer = document.getElementById('modalIconContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        // --- Fungsi untuk menampilkan modal ---
+        function showModal(type, title, message) {
+            alertModal.classList.remove('hidden', 'modal-leave');
+            alertModal.classList.add('modal-enter');
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+
+            if (type === 'success') {
+                modalIconContainer.innerHTML = '<i data-feather="check" class="w-10 h-10 text-green-600"></i>';
+                modalIconContainer.className = 'mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100';
+                closeModalButton.className = 'mt-8 w-full text-white font-bold py-3 rounded-lg bg-blue-600 hover:bg-blue-700';
+                closeModalButton.textContent = 'Tutup';
+            } else { // error
+                modalIconContainer.innerHTML = '<i data-feather="alert-triangle" class="w-10 h-10 text-red-600"></i>';
+                modalIconContainer.className = 'mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100';
+                closeModalButton.className = 'mt-8 w-full text-white font-bold py-3 rounded-lg bg-red-600 hover:bg-red-700';
+                closeModalButton.textContent = 'Mengerti';
+            }
+            feather.replace();
+        }
+        
+        closeModalButton.addEventListener('click', () => {
+             alertModal.classList.add('modal-leave');
+             setTimeout(() => alertModal.classList.add('hidden'), 300);
+        });
+
+        // --- Fungsi untuk mengubah file menjadi base64 ---
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+        
+        // --- Fungsi untuk reset tampilan form ---
+        function resetFormDisplay() {
+            form.reset();
+            pdfPreviewContainer.classList.add('hidden');
+            imagePreview.classList.add('hidden');
+            imagePreview.src = "";
+            undanganPreviewContainer.classList.add('hidden');
+        }
+
+        // --- Event Listeners untuk Preview File ---
+        suratTugasInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                pdfFilenameSpan.textContent = file.name;
+                pdfPreviewContainer.classList.remove('hidden');
+                pdfPreviewContainer.classList.add('flex');
+            } else {
+                pdfPreviewContainer.classList.add('hidden');
+                if (file) {
+                    showModal('error', 'Format Salah', 'Harap unggah file dengan format PDF.');
+                    suratTugasInput.value = "";
+                }
+            }
+        });
+
+        fotoKegiatanInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.classList.add('hidden');
+                imagePreview.src = "";
+                if (file) {
+                    showModal('error', 'Format Salah', 'Harap unggah file dengan format gambar.');
+                    fotoKegiatanInput.value = "";
+                }
+            }
+        });
+
+        suratUndanganInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                undanganFilenameSpan.textContent = file.name;
+                undanganPreviewContainer.classList.remove('hidden');
+                undanganPreviewContainer.classList.add('flex');
+            } else {
+                undanganPreviewContainer.classList.add('hidden');
+            }
+        });
+
+        // --- Event Listener untuk Form Submission ---
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div class="loader"></div>';
+
+            try {
+                const suratTugasFile = suratTugasInput.files[0];
+                const fotoKegiatanFile = fotoKegiatanInput.files[0];
+                const suratUndanganFile = suratUndanganInput.files[0];
+
+                if (!suratTugasFile || !fotoKegiatanFile || !suratUndanganFile) {
+                    throw new Error("Harap unggah semua file yang wajib diisi.");
+                }
+
+                const [suratTugasBase64, fotoKegiatanBase64, suratUndanganBase64] = await Promise.all([
+                    fileToBase64(suratTugasFile),
+                    fileToBase64(fotoKegiatanFile),
+                    fileToBase64(suratUndanganFile)
+                ]);
+
+                const payload = {
+                    namaLengkap: document.getElementById('nama_lengkap').value,
+                    jabatan: document.getElementById('jabatan').value,
+                    tanggalIzin: document.getElementById('tanggal_izin').value,
+                    waktuIzin: document.getElementById('waktu_izin').value,
+                    waktuSelesai: document.getElementById('waktu_selesai').value, // Data baru
+                    tempatKegiatan: document.getElementById('tempat_kegiatan').value,
+                    suratTugas: {
+                        base64: suratTugasBase64,
+                        mimeType: suratTugasFile.type,
+                        fileName: suratTugasFile.name
+                    },
+                    fotoKegiatan: {
+                        base64: fotoKegiatanBase64,
+                        mimeType: fotoKegiatanFile.type,
+                        fileName: fotoKegiatanFile.name
+                    },
+                    suratUndangan: {
+                        base64: suratUndanganBase64,
+                        mimeType: suratUndanganFile.type,
+                        fileName: suratUndanganFile.name
+                    }
+                };
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+
+                const result = await response.json();
+
+                if (result.status !== 'success') {
+                    throw new Error(result.message);
+                }
+
+                showModal('success', 'Perizinan Terkirim!', 'Data Anda telah berhasil disimpan di Google Drive & Sheets.');
+                resetFormDisplay();
+
+            } catch (error) {
+                console.error("Error submitting form: ", error);
+                showModal('error', 'Terjadi Kesalahan', error.message || 'Tidak dapat mengirim data. Silakan coba lagi.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i data-feather="send"></i> Kirim Perizinan';
+                feather.replace();
+            }
+        });
+        
+        // Inisialisasi ikon
+        feather.replace();
+    </script>
+</body>
+</html>

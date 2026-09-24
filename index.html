@@ -4,80 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIPINTER (Sistem Perizinan Terpadu Al-Multazam)</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts (Inter) for a modern look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Feather Icons for a clean icon set -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
-        /* Apply the Inter font to the body */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* A lighter, softer background */
-        }
-
-        /* Custom focus styles for better accessibility and aesthetics */
-        .focus-ring:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
-            border-color: #3B82F6;
-        }
-
-        /* Custom file input button styling for a consistent look */
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
+        .focus-ring:focus { outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); border-color: #3B82F6; }
         .file-input-button::file-selector-button {
-            margin-right: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            border: 0;
-            font-size: 0.875rem;
-            font-weight: 600;
-            background-color: #EFF6FF; /* bg-blue-50 */
-            color: #1D4ED8; /* text-blue-700 */
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
+            margin-right: 1rem; padding: 0.5rem 1rem; border-radius: 0.375rem; border: 0; font-size: 0.875rem;
+            font-weight: 600; background-color: #EFF6FF; color: #1D4ED8; cursor: pointer; transition: background-color 0.2s;
         }
-
-        .file-input-button::file-selector-button:hover {
-            background-color: #DBEAFE; /* bg-blue-100 */
-        }
-
-        /* Animation for the modal */
-        .modal-enter {
-            animation: fadeIn 0.3s ease-out;
-        }
-        .modal-leave {
-            animation: fadeOut 0.3s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.95); }
-        }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .file-input-button::file-selector-button:hover { background-color: #DBEAFE; }
+        .modal-enter { animation: fadeIn 0.3s ease-out; }
+        .modal-leave { animation: fadeOut 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+        .loader { border: 4px solid #f3f3f3; border-radius: 50%; border-top: 4px solid #3498db; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-small { border-width: 2px; width: 14px; height: 14px; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+<body class="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
 
-    <!-- Main form container with enhanced shadow and border -->
-    <div class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500">
-        <!-- Form Header with a gradient background -->
+    <!-- Tombol Akses Admin -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="btnAdmin" class="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray-700 flex items-center gap-2 text-sm font-semibold transition-all">
+            <i data-feather="lock" class="w-4 h-4"></i> Login Admin
+        </button>
+    </div>
+
+    <!-- Form Container -->
+    <div id="formContainer" class="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500">
         <div class="p-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
             <div class="flex items-center gap-4">
                 <img src="https://i.ibb.co.com/PG59mBdt/Logo-SMA-Baru.png" alt="Logo SIPINTER" class="w-16 h-16 object-contain">
@@ -88,14 +47,12 @@
             </div>
         </div>
 
-        <!-- Form Body -->
         <form id="permissionForm" class="p-8 space-y-8">
             <p class="text-sm text-gray-700 bg-blue-50 p-4 rounded-lg border border-blue-200 flex items-center gap-3">
                 <i data-feather="info" class="w-5 h-5 text-blue-600"></i>
                 <span>Silakan isi formulir perizinan ini dengan lengkap dan benar. Kolom bertanda <span class="text-red-500 font-bold">*</span> wajib diisi.</span>
             </p>
 
-            <!-- Section: Data Diri -->
             <fieldset class="space-y-6">
                 <legend class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4 w-full">Data Diri</legend>
                 <div>
@@ -117,7 +74,6 @@
                 </div>
             </fieldset>
 
-            <!-- Section: Detail Izin & Kegiatan -->
              <fieldset class="space-y-6">
                 <legend class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4 w-full">Detail Izin & Kegiatan</legend>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -140,12 +96,22 @@
                 </div>
             </fieldset>
 
-            <!-- Section: Lampiran -->
             <fieldset class="space-y-6">
                 <legend class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4 w-full">Lampiran</legend>
-                <!-- Field: Unggah Surat Tugas -->
+
+                <!-- KOTAK TEMPLATE LAPORAN (TAMBAHAN BARU) -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-5 flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                    <a href="https://docs.google.com/document/d/1DKAmQicdbYTpe9ZsYIJxZdonzQomPYYF/edit?usp=drive_link&ouid=108788427709948088034&rtpof=true&sd=true" target="_blank" class="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition-colors text-sm flex items-center gap-2 text-center">
+                        <i data-feather="download-cloud" class="w-4 h-4"></i> Download Template
+                    </a>
+                    <p class="text-sm text-gray-700 leading-relaxed text-center sm:text-left">
+                        Wajib Download file laporan perjalanan dinas berikut kemudian isi dan scan jadi satu dengan SPPD yang sudah di tanda tangani. (Wajib di lampirkan bersama dengan SPPD)
+                    </p>
+                </div>
+                <!-- AKHIR KOTAK TEMPLATE LAPORAN -->
+
                 <div>
-                    <label for="surat_tugas" class="block text-sm font-medium text-gray-700 mb-1">Unggah Surat Tugas <span class="text-red-500">*</span></label>
+                    <label for="surat_tugas" class="block text-sm font-medium text-gray-700 mb-1">Unggah Surat Tugas (Beserta Laporan) <span class="text-red-500">*</span></label>
                     <div class="flex items-start gap-4">
                         <div class="flex-grow">
                             <input type="file" id="surat_tugas" name="surat_tugas" required accept=".pdf" class="w-full text-sm text-gray-500 file-input-button border rounded-lg p-2 border-gray-300">
@@ -158,7 +124,6 @@
                     </div>
                 </div>
 
-                <!-- Field: Unggah Foto Kegiatan -->
                 <div>
                     <label for="foto_kegiatan" class="block text-sm font-medium text-gray-700 mb-1">Unggah Foto Kegiatan <span class="text-red-500">*</span></label>
                     <div class="flex items-start gap-4">
@@ -170,7 +135,6 @@
                     </div>
                 </div>
                 
-                <!-- Field: Unggah Surat Undangan (Wajib) -->
                 <div>
                     <label for="surat_undangan" class="block text-sm font-medium text-gray-700 mb-1">Unggah Surat Undangan / Lainnya <span class="text-red-500">*</span></label>
                     <div class="flex items-start gap-4">
@@ -186,7 +150,6 @@
                 </div>
             </fieldset>
 
-            <!-- Submit Button -->
             <div class="pt-6 border-t border-gray-200">
                 <button type="submit" id="submitButton" class="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 flex items-center justify-center gap-2">
                     <i data-feather="send" class="w-5 h-5"></i>
@@ -196,8 +159,62 @@
         </form>
     </div>
 
-    <!-- Modal (Success & Alert) -->
-    <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+    <!-- ADMIN CONTAINER -->
+    <div id="adminContainer" class="hidden w-full max-w-[90rem] mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500">
+        <div class="p-8 bg-gradient-to-r from-gray-800 to-gray-900 text-white flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-gray-700 p-3 rounded-full">
+                    <i data-feather="database" class="w-8 h-8 text-blue-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight">Panel Admin SIPINTER</h1>
+                    <p class="mt-1 text-gray-300 text-sm">Rekapitulasi Data & Status Pencairan</p>
+                </div>
+            </div>
+            <button id="btnBackToForm" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 border border-gray-600">
+                <i data-feather="arrow-left" class="w-4 h-4"></i> Kembali ke Form
+            </button>
+        </div>
+
+        <div class="p-8">
+            <div class="mb-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <button id="btnRefreshData" class="bg-blue-50 text-blue-700 border border-blue-200 px-4 py-2 rounded-lg hover:bg-blue-100 transition flex items-center gap-2 text-sm font-semibold">
+                    <i data-feather="refresh-cw" class="w-4 h-4"></i> Muat Ulang Data
+                </button>
+                <div class="relative w-full sm:w-64">
+                    <i data-feather="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" id="searchInput" placeholder="Cari nama pegawai..." class="w-full pl-9 p-2 border border-gray-300 rounded-md text-sm focus-ring">
+                </div>
+            </div>
+
+            <div class="overflow-x-auto border border-gray-200 rounded-lg">
+                <table class="w-full text-sm text-left text-gray-600">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <tr>
+                            <th class="px-3 py-4 border-b">No</th>
+                            <th class="px-3 py-4 border-b">Identitas Pemohon</th>
+                            <th class="px-3 py-4 border-b">Detail Izin & Tempat</th>
+                            <th class="px-3 py-4 border-b text-center">Tugas</th>
+                            <th class="px-3 py-4 border-b text-center">Foto</th>
+                            <th class="px-3 py-4 border-b text-center">Undangan</th>
+                            <th class="px-3 py-4 border-b w-48">Status Pencairan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Data akan dirender di sini via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loadingData" class="hidden text-center py-12">
+                <div class="loader mx-auto mb-4"></div>
+                <p class="text-gray-500 font-medium">Sedang menyinkronkan data dari Google Sheets...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Alert -->
+    <div id="alertModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[100] hidden">
         <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center">
             <div id="modalIconContainer" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full"></div>
             <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mt-6"></h3>
@@ -208,11 +225,11 @@
 
     <script>
         // =====================================================================
-        // URL APLIKASI WEB ANDA (SUDAH DIPERBARUI)
+        // URL APLIKASI WEB ANDA
         // =====================================================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc3RVSSNBsFsgO1cy_cW0or1H7laUeVxaD3rwVr-tIVEQGibBOgD1yNEaXeVk-WEglHQ/exec";
 
-        // --- DOM Element References ---
+        // --- DOM Elements ---
         const form = document.getElementById('permissionForm');
         const submitButton = document.getElementById('submitButton');
         const suratTugasInput = document.getElementById('surat_tugas');
@@ -224,14 +241,21 @@
         const undanganPreviewContainer = document.getElementById('undangan_preview');
         const undanganFilenameSpan = document.getElementById('undangan_filename');
         
-        // --- Modal Element References ---
+        const btnAdmin = document.getElementById('btnAdmin');
+        const btnBackToForm = document.getElementById('btnBackToForm');
+        const formContainer = document.getElementById('formContainer');
+        const adminContainer = document.getElementById('adminContainer');
+        const btnRefreshData = document.getElementById('btnRefreshData');
+        const adminTableBody = document.getElementById('adminTableBody');
+        const loadingData = document.getElementById('loadingData');
+        const searchInput = document.getElementById('searchInput');
+
         const alertModal = document.getElementById('alertModal');
         const modalIconContainer = document.getElementById('modalIconContainer');
         const modalTitle = document.getElementById('modalTitle');
         const modalMessage = document.getElementById('modalMessage');
         const closeModalButton = document.getElementById('closeModalButton');
 
-        // --- Fungsi untuk menampilkan modal ---
         function showModal(type, title, message) {
             alertModal.classList.remove('hidden', 'modal-leave');
             alertModal.classList.add('modal-enter');
@@ -243,7 +267,7 @@
                 modalIconContainer.className = 'mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100';
                 closeModalButton.className = 'mt-8 w-full text-white font-bold py-3 rounded-lg bg-blue-600 hover:bg-blue-700';
                 closeModalButton.textContent = 'Tutup';
-            } else { // error
+            } else {
                 modalIconContainer.innerHTML = '<i data-feather="alert-triangle" class="w-10 h-10 text-red-600"></i>';
                 modalIconContainer.className = 'mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100';
                 closeModalButton.className = 'mt-8 w-full text-white font-bold py-3 rounded-lg bg-red-600 hover:bg-red-700';
@@ -257,7 +281,6 @@
              setTimeout(() => alertModal.classList.add('hidden'), 300);
         });
 
-        // --- Fungsi untuk mengubah file menjadi base64 ---
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -267,7 +290,6 @@
             });
         }
         
-        // --- Fungsi untuk reset tampilan form ---
         function resetFormDisplay() {
             form.reset();
             pdfPreviewContainer.classList.add('hidden');
@@ -276,7 +298,6 @@
             undanganPreviewContainer.classList.add('hidden');
         }
 
-        // --- Event Listeners untuk Preview File ---
         suratTugasInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file && file.type === 'application/pdf') {
@@ -285,10 +306,7 @@
                 pdfPreviewContainer.classList.add('flex');
             } else {
                 pdfPreviewContainer.classList.add('hidden');
-                if (file) {
-                    showModal('error', 'Format Salah', 'Harap unggah file dengan format PDF.');
-                    suratTugasInput.value = "";
-                }
+                if (file) { showModal('error', 'Format Salah', 'Harap unggah file dengan format PDF.'); suratTugasInput.value = ""; }
             }
         });
 
@@ -296,18 +314,11 @@
             const file = event.target.files[0];
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.classList.remove('hidden');
-                }
+                reader.onload = function(e) { imagePreview.src = e.target.result; imagePreview.classList.remove('hidden'); }
                 reader.readAsDataURL(file);
             } else {
-                imagePreview.classList.add('hidden');
-                imagePreview.src = "";
-                if (file) {
-                    showModal('error', 'Format Salah', 'Harap unggah file dengan format gambar.');
-                    fotoKegiatanInput.value = "";
-                }
+                imagePreview.classList.add('hidden'); imagePreview.src = "";
+                if (file) { showModal('error', 'Format Salah', 'Harap unggah file dengan format gambar.'); fotoKegiatanInput.value = ""; }
             }
         });
 
@@ -317,12 +328,9 @@
                 undanganFilenameSpan.textContent = file.name;
                 undanganPreviewContainer.classList.remove('hidden');
                 undanganPreviewContainer.classList.add('flex');
-            } else {
-                undanganPreviewContainer.classList.add('hidden');
-            }
+            } else { undanganPreviewContainer.classList.add('hidden'); }
         });
 
-        // --- Event Listener untuk Form Submission ---
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitButton.disabled = true;
@@ -333,14 +341,10 @@
                 const fotoKegiatanFile = fotoKegiatanInput.files[0];
                 const suratUndanganFile = suratUndanganInput.files[0];
 
-                if (!suratTugasFile || !fotoKegiatanFile || !suratUndanganFile) {
-                    throw new Error("Harap unggah semua file yang wajib diisi.");
-                }
+                if (!suratTugasFile || !fotoKegiatanFile || !suratUndanganFile) throw new Error("Harap unggah semua file yang wajib diisi.");
 
                 const [suratTugasBase64, fotoKegiatanBase64, suratUndanganBase64] = await Promise.all([
-                    fileToBase64(suratTugasFile),
-                    fileToBase64(fotoKegiatanFile),
-                    fileToBase64(suratUndanganFile)
+                    fileToBase64(suratTugasFile), fileToBase64(fotoKegiatanFile), fileToBase64(suratUndanganFile)
                 ]);
 
                 const payload = {
@@ -348,51 +352,188 @@
                     jabatan: document.getElementById('jabatan').value,
                     tanggalIzin: document.getElementById('tanggal_izin').value,
                     waktuIzin: document.getElementById('waktu_izin').value,
-                    waktuSelesai: document.getElementById('waktu_selesai').value, // Data baru
+                    waktuSelesai: document.getElementById('waktu_selesai').value,
                     tempatKegiatan: document.getElementById('tempat_kegiatan').value,
-                    suratTugas: {
-                        base64: suratTugasBase64,
-                        mimeType: suratTugasFile.type,
-                        fileName: suratTugasFile.name
-                    },
-                    fotoKegiatan: {
-                        base64: fotoKegiatanBase64,
-                        mimeType: fotoKegiatanFile.type,
-                        fileName: fotoKegiatanFile.name
-                    },
-                    suratUndangan: {
-                        base64: suratUndanganBase64,
-                        mimeType: suratUndanganFile.type,
-                        fileName: suratUndanganFile.name
-                    }
+                    suratTugas: { base64: suratTugasBase64, mimeType: suratTugasFile.type, fileName: suratTugasFile.name },
+                    fotoKegiatan: { base64: fotoKegiatanBase64, mimeType: fotoKegiatanFile.type, fileName: fotoKegiatanFile.name },
+                    suratUndangan: { base64: suratUndanganBase64, mimeType: suratUndanganFile.type, fileName: suratUndanganFile.name }
                 };
                 
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                });
-
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
                 const result = await response.json();
 
-                if (result.status !== 'success') {
-                    throw new Error(result.message);
-                }
+                if (result.status !== 'success') throw new Error(result.message);
 
                 showModal('success', 'Perizinan Terkirim!', 'Data Anda telah berhasil disimpan di Google Drive & Sheets.');
                 resetFormDisplay();
 
             } catch (error) {
-                console.error("Error submitting form: ", error);
                 showModal('error', 'Terjadi Kesalahan', error.message || 'Tidak dapat mengirim data. Silakan coba lagi.');
             } finally {
                 submitButton.disabled = false;
-                submitButton.innerHTML = '<i data-feather="send"></i> Kirim Perizinan';
+                submitButton.innerHTML = '<i data-feather="send" class="w-5 h-5"></i> Kirim Perizinan';
                 feather.replace();
             }
         });
+
+        // =====================================================================
+        // LOGIKA MENU ADMIN
+        // =====================================================================
+
+        let adminData = [];
+
+        btnAdmin.addEventListener('click', () => {
+            const pwd = prompt("Masukkan Password Admin:");
+            if (pwd === "admin123") {
+                formContainer.classList.add('hidden');
+                btnAdmin.classList.add('hidden');
+                adminContainer.classList.remove('hidden');
+                loadAdminData();
+            } else if (pwd !== null) {
+                alert("Password Salah!");
+            }
+        });
+
+        btnBackToForm.addEventListener('click', () => {
+            adminContainer.classList.add('hidden');
+            formContainer.classList.remove('hidden');
+            btnAdmin.classList.remove('hidden');
+        });
+
+        btnRefreshData.addEventListener('click', loadAdminData);
+
+        async function loadAdminData() {
+            adminTableBody.innerHTML = '';
+            loadingData.classList.remove('hidden');
+            
+            try {
+                const response = await fetch(SCRIPT_URL + "?action=getData");
+                const result = await response.json();
+                loadingData.classList.add('hidden');
+
+                if (result.status === 'success' && result.data) {
+                    adminData = result.data;
+                    renderAdminTable(adminData);
+                } else {
+                    adminTableBody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-red-500">Gagal memuat data dari Spreadsheet.</td></tr>`;
+                }
+            } catch (error) {
+                loadingData.classList.add('hidden');
+                adminTableBody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-red-500">Koneksi Error. Pastikan URL Apps Script benar.</td></tr>`;
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = adminData.filter(item => 
+                item.namaLengkap.toLowerCase().includes(keyword) || 
+                item.jabatan.toLowerCase().includes(keyword) ||
+                item.tempatKegiatan.toLowerCase().includes(keyword)
+            );
+            renderAdminTable(filtered);
+        });
+
+        // FUNGSI BARU: Menyimpan perubahan status langsung ke Google Sheet
+        window.saveStatus = async function(rowNumber) {
+            const inputEl = document.getElementById('status_' + rowNumber);
+            const btnEl = document.getElementById('btn_status_' + rowNumber);
+            const newStatusValue = inputEl.value;
+
+            // Tampilkan icon loading
+            btnEl.disabled = true;
+            btnEl.innerHTML = '<div class="loader loader-small"></div>';
+
+            try {
+                const url = `${SCRIPT_URL}?action=updateStatus&row=${rowNumber}&status=${encodeURIComponent(newStatusValue)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch(e) {
+                    console.error("Error dari server:", text);
+                    throw new Error("Gagal menyimpan! 1. Pastikan Anda sudah memberikan izin akses script (Tes Jalankan fungsinya). 2. Pastikan Deploy sebagai Versi Baru dan pilih Siapa Saja (Anyone).");
+                }
+
+                if(result.status === 'success') {
+                    // Berhasil: Ubah tombol jadi hijau (icon centang)
+                    btnEl.innerHTML = '<i data-feather="check" class="w-4 h-4"></i>';
+                    btnEl.classList.remove('bg-blue-100', 'text-blue-700', 'hover:bg-blue-200');
+                    btnEl.classList.add('bg-green-100', 'text-green-700');
+                    
+                    // Update data lokal
+                    const dataIndex = adminData.findIndex(d => d.rowNumber === rowNumber);
+                    if(dataIndex > -1) adminData[dataIndex].status = newStatusValue;
+
+                    // Kembalikan tombol ke icon save setelah 2 detik
+                    setTimeout(() => {
+                        btnEl.innerHTML = '<i data-feather="save" class="w-4 h-4"></i>';
+                        btnEl.classList.remove('bg-green-100', 'text-green-700');
+                        btnEl.classList.add('bg-blue-100', 'text-blue-700', 'hover:bg-blue-200');
+                        btnEl.disabled = false;
+                        feather.replace();
+                    }, 2000);
+                } else {
+                    throw new Error("Gagal menyimpan dari server.");
+                }
+            } catch(error) {
+                alert(error.message); // Menampilkan pesan error spesifik
+                btnEl.innerHTML = '<i data-feather="save" class="w-4 h-4"></i>';
+                btnEl.disabled = false;
+            }
+            feather.replace();
+        };
+
+        function renderAdminTable(data) {
+            adminTableBody.innerHTML = '';
+            if (data.length === 0) {
+                adminTableBody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-gray-500">Tidak ada data ditemukan.</td></tr>`;
+                return;
+            }
+
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "bg-white border-b hover:bg-gray-50 transition-colors";
+                
+                const renderFileLink = (url) => {
+                    if (!url || url === "#" || url === "") return `<span class="text-gray-400 text-xs italic">-</span>`;
+                    return `<a href="${url}" target="_blank" class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2 py-1.5 rounded-md text-xs font-semibold hover:bg-blue-100 transition"><i data-feather="external-link" class="w-3 h-3"></i></a>`;
+                };
+
+                tr.innerHTML = `
+                    <td class="px-3 py-4 align-top font-medium">${index + 1}</td>
+                    <td class="px-3 py-4 align-top">
+                        <div class="font-bold text-gray-800">${row.namaLengkap}</div>
+                        <div class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i data-feather="briefcase" class="w-3 h-3"></i> ${row.jabatan}</div>
+                    </td>
+                    <td class="px-3 py-4 align-top">
+                        <div class="text-gray-800 font-medium text-xs flex items-center gap-1"><i data-feather="calendar" class="w-3 h-3 text-gray-400"></i> ${row.tanggalIzin}</div>
+                        <div class="text-gray-600 text-xs mt-1 flex items-center gap-1"><i data-feather="clock" class="w-3 h-3 text-gray-400"></i> ${row.waktuIzin} - ${row.waktuSelesai}</div>
+                        <div class="text-gray-500 text-xs mt-1 flex items-center gap-1"><i data-feather="map-pin" class="w-3 h-3 text-gray-400"></i> ${row.tempatKegiatan}</div>
+                    </td>
+                    <td class="px-3 py-4 align-top text-center">${renderFileLink(row.urlSuratTugas)}</td>
+                    <td class="px-3 py-4 align-top text-center">${renderFileLink(row.urlFotoKegiatan)}</td>
+                    <td class="px-3 py-4 align-top text-center">${renderFileLink(row.urlSuratUndangan)}</td>
+                    
+                    <!-- KOTAK PENGISIAN MANUAL -->
+                    <td class="px-3 py-4 align-top">
+                        <div class="flex flex-col sm:flex-row items-center gap-2">
+                            <input type="text" id="status_${row.rowNumber}" value="${row.status || ''}" 
+                                placeholder="Cth: Cair, Ditolak..." 
+                                class="w-full sm:w-32 border border-gray-300 rounded p-1.5 text-sm focus-ring">
+                            <button id="btn_status_${row.rowNumber}" onclick="saveStatus(${row.rowNumber})" 
+                                class="bg-blue-100 text-blue-700 p-1.5 rounded hover:bg-blue-200 transition focus:outline-none" title="Simpan Perubahan">
+                                <i data-feather="save" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                adminTableBody.appendChild(tr);
+            });
+            feather.replace();
+        }
         
-        // Inisialisasi ikon
         feather.replace();
     </script>
 </body>
